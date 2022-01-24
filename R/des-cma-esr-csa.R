@@ -2,8 +2,8 @@ library(BBmisc)
 library(checkmate)
 library(magrittr)
 source(here::here("R", "cmaesr-utils.R"))
-source("des.R")
-source("cma-esr-csa.R")
+source(here::here("R", "des.R"))
+source(here::here("R", "cma-esr-csa.R"))
 
 #' DES-CMA-ES-CSA
 
