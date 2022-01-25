@@ -1,6 +1,7 @@
 library(BBmisc)
 library(checkmate)
 library(magrittr)
+library(Matrix)
 source(here::here("R", "cmaesr-utils.R"))
 source(here::here("R", "des.R"))
 source(here::here("R", "cma-esr-ppmf.R"))
@@ -30,10 +31,19 @@ des_cma_esr_ppmf <- function(
     mu = mu
   ))
 
+  b <- matrix()
+  d <- matrix()
   C <- cov(t(des_result$diagnostic$pop))
   e <- eigen(C, symmetric = TRUE)
-  b <- e$vectors
-  d <- diag(sqrt(e$values), length(e$values))
+  if (any(e$values) < 0) {
+    C_corr = Matrix::nearPD(C)
+    e_corr = eigen(C_corr, symmetrix = TRUE)
+    b = e_corr$vectors
+    d <- diag(sqrt(e_corr$values), length(e_corr$values))
+  } else {
+    b <- e$vectors
+    d <- diag(sqrt(e$values), length(e$values))
+  }
 
   return(cma_esr_ppmf(
     par = des_result$par,
