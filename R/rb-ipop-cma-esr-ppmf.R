@@ -23,11 +23,7 @@ rb_ipop_cma_esr_ppmf = function(
   n = length(par)
 	
   # get stopping conditions
-  budget = if (n == 10) {
-    200000
-  } else {
-    1000000
-  }
+  budget <- getCMAESParameter(control, "budget", 10000 * n)
   stop_ons_list = 
     c(
       list(stopOnMaxEvals(budget)),
@@ -60,7 +56,9 @@ rb_ipop_cma_esr_ppmf = function(
   assertInt(max.restarts)
 
   #FIXME: default value should be derived from bounds
-  sigma = getCMAESParameter(control, "sigma", 7)
+  sigma <- getCMAESParameter(control, "sigma", 1)
+  B <- getCMAESParameter(control, "B_matrix", diag(n))
+  D <- getCMAESParameter(control, "D_matrix", diag(n))
   assertNumber(sigma, lower = 0L, finite = TRUE)
   d_param = getCMAESParameter(control, "d_param", 2)
   p_target = getCMAESParameter(control, "p_target", 0.1)
@@ -143,8 +141,9 @@ rb_ipop_cma_esr_ppmf = function(
 
     # covariance matrix
     sigma = getCMAESParameter(control, "sigma", 7)
-    B = diag(n)
-    D = diag(n)
+    sigma <- getCMAESParameter(control, "sigma", 1)
+    B <- getCMAESParameter(control, "B_matrix", diag(n))
+    D <- getCMAESParameter(control, "D_matrix", diag(n))
     BD = B %*% D
     C = BD %*% t(BD) # C = B D^2 B^T = B B^T, since D equals I_n
     Cinvsqrt = B %*% diag(1 / sqrt(diag(D))) %*% t(B)

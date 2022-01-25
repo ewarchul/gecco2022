@@ -4,9 +4,9 @@ library(magrittr)
 source(here::here("R", "cmaesr-utils.R"))
 source(here::here("R", "hybrid-utils.R"))
 source(here::here("R", "des.R"))
-source(here::here("R", "cma-esr-csa.R"))
+source(here::here("R", "rb-ipop-cma-esr-ppmf.R"))
 
-#' DES-CMA-ES-CSA
+#' DES-RB-IPOP-CMA-ES-PPMF
 
-des_cma_esr_csa <- hybrid_factory(des, cma_esr_csa)
+des_rb_ipop_cma_esr_ppmf <- hybrid_factory(des, rb_ipop_cma_esr_ppmf)
 

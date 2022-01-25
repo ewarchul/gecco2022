@@ -23,13 +23,8 @@ rb_ipop_cma_esr_csa = function(
   n = length(par)
 	
   # get stopping conditions
-  budget = if (n == 10) {
-    200000
-  } else if ( n == 20) {
-    1000000
-  } else {
-	10000 * n
-  }
+  budget <- getCMAESParameter(control, "budget", 10000 * n)
+  
   stop_ons_list = 
     c(
       list(stopOnMaxEvals(budget)),
@@ -63,11 +58,13 @@ rb_ipop_cma_esr_csa = function(
   assertInt(max.restarts)
 
   #FIXME: default value should be derived from bounds
-  sigma = getCMAESParameter(control, "sigma", 7)
+  sigma <- getCMAESParameter(control, "sigma", 1)
+  B <- getCMAESParameter(control, "B_matrix", diag(n))
+  D <- getCMAESParameter(control, "D_matrix", diag(n))
+
   assertNumber(sigma, lower = 0L, finite = TRUE)
   last_its_type = getCMAESParameter(control, "last_its_type", "mean")
 
-  print(last_its_type)
 
   # Precompute E||N(0,I)||
 	chi.n = sqrt(n) * (1 - 1 / (4 * n) + 1 / (21 * n^2))
@@ -142,9 +139,9 @@ rb_ipop_cma_esr_csa = function(
     ccov = (1/cmu) * 2/(n+1.4)^2 + (1-1/cmu) * ((2*cmu-1)/((n+2)^2+2*cmu))
 
     # covariance matrix
-    sigma = getCMAESParameter(control, "sigma", 7)
-    B = diag(n)
-    D = diag(n)
+    sigma <- getCMAESParameter(control, "sigma", 1)
+    B <- getCMAESParameter(control, "B_matrix", diag(n))
+    D <- getCMAESParameter(control, "D_matrix", diag(n))
     BD = B %*% D
     C = BD %*% t(BD) # C = B D^2 B^T = B B^T, since D equals I_n
     Cinvsqrt = B %*% diag(1 / sqrt(diag(D))) %*% t(B)
