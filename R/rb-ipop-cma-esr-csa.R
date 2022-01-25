@@ -59,8 +59,6 @@ rb_ipop_cma_esr_csa = function(
 
   #FIXME: default value should be derived from bounds
   sigma <- getCMAESParameter(control, "sigma", 1)
-  B <- getCMAESParameter(control, "B_matrix", diag(n))
-  D <- getCMAESParameter(control, "D_matrix", diag(n))
 
   assertNumber(sigma, lower = 0L, finite = TRUE)
   last_its_type = getCMAESParameter(control, "last_its_type", "mean")
@@ -89,7 +87,7 @@ rb_ipop_cma_esr_csa = function(
 
   # somehow dirty trick to "really quit" if stopping condition is met and
   # now more restart should be triggered.
-  do.terminate = FALSE
+  do.terminate = TRUE
 
   max_dx = (ub - lb) / 5
   last_its = 10 + ceiling(30 * n / (4 * n))
@@ -107,7 +105,7 @@ rb_ipop_cma_esr_csa = function(
       # increase population size (IPOP-CMA-ES)
       lambda = ceiling(restart.multiplier^run * lambda)
       mu = floor(lambda / 2)
-      m = runif(n, lb, ub)
+      m = par
     }
 
     # path for covariance matrix C and stepsize sigma
@@ -140,8 +138,8 @@ rb_ipop_cma_esr_csa = function(
 
     # covariance matrix
     sigma <- getCMAESParameter(control, "sigma", 1)
-    B <- getCMAESParameter(control, "B_matrix", diag(n))
-    D <- getCMAESParameter(control, "D_matrix", diag(n))
+    B <- diag(n)
+    D <- diag(n)
     BD = B %*% D
     C = BD %*% t(BD) # C = B D^2 B^T = B B^T, since D equals I_n
     Cinvsqrt = B %*% diag(1 / sqrt(diag(D))) %*% t(B)
