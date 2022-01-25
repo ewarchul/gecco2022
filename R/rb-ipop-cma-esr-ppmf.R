@@ -57,8 +57,6 @@ rb_ipop_cma_esr_ppmf = function(
 
   #FIXME: default value should be derived from bounds
   sigma <- getCMAESParameter(control, "sigma", 1)
-  B <- getCMAESParameter(control, "B_matrix", diag(n))
-  D <- getCMAESParameter(control, "D_matrix", diag(n))
   assertNumber(sigma, lower = 0L, finite = TRUE)
   d_param = getCMAESParameter(control, "d_param", 2)
   p_target = getCMAESParameter(control, "p_target", 0.1)
@@ -87,13 +85,12 @@ rb_ipop_cma_esr_ppmf = function(
 
   # somehow dirty trick to "really quit" if stopping condition is met and
   # now more restart should be triggered.
-  do.terminate = FALSE
+  do.terminate = TRUE
 
   max_dx = (ub - lb) / 5
   last_its = 10 + ceiling(30 * n / (4 * n))
-  print(sigma)
-  print(d_param)
-  print(p_target)
+  B <- matrix()
+  D <- matrix()
 
   for (run in 0:max.restarts) {
     # population and offspring size
@@ -103,12 +100,16 @@ rb_ipop_cma_esr_ppmf = function(
       mu = getCMAESParameter(control, "mu", floor(lambda / 2))
       assertInt(mu)
 	    m = par
+      B <- diag(n)#getCMAESParameter(control, "B_matrix", diag(n))
+      D <- diag(n)#getCMAESParameter(control, "D_matrix", diag(n))
     } else {
       lambda = getCMAESParameter(control, "lambda", 4 * n)
       # increase population size (IPOP-CMA-ES)
       lambda = ceiling(restart.multiplier^run * lambda)
       mu = floor(lambda / 2)
       m = runif(n, lb, ub)
+      B <- diag(n)
+      D <- diag(n)
     }
 
     # path for covariance matrix C and stepsize sigma
@@ -140,13 +141,9 @@ rb_ipop_cma_esr_ppmf = function(
     ccov = (1/cmu) * 2/(n+1.4)^2 + (1-1/cmu) * ((2*cmu-1)/((n+2)^2+2*cmu))
 
     # covariance matrix
-    sigma = getCMAESParameter(control, "sigma", 7)
-    sigma <- getCMAESParameter(control, "sigma", 1)
-    B <- getCMAESParameter(control, "B_matrix", diag(n))
-    D <- getCMAESParameter(control, "D_matrix", diag(n))
+    sigma <- getCMAESParameter(control, "sigma", 1) 
     BD = B %*% D
     C = BD %*% t(BD) # C = B D^2 B^T = B B^T, since D equals I_n
-    Cinvsqrt = B %*% diag(1 / sqrt(diag(D))) %*% t(B)
 
     # no restart trigger fired until now
     restarting = FALSE
@@ -265,7 +262,6 @@ rb_ipop_cma_esr_ppmf = function(
       B = e$vectors
       D = diag(sqrt(e$values), length(e$values))
       BD = B %*% D
-      Cinvsqrt = B %*% diag(1 / diag(D)) %*% t(B) # update C^-1/2
 
       # escape flat fitness values
       # RB-IPOP: Increase sigma multiplier by 2
