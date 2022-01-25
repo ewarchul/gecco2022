@@ -35,9 +35,9 @@ des_cma_esr_ppmf <- function(
   d <- matrix()
   C <- cov(t(des_result$diagnostic$pop))
   e <- eigen(C, symmetric = TRUE)
-  if (any(e$values) < 0) {
-    C_corr = Matrix::nearPD(C)
-    e_corr = eigen(C_corr, symmetrix = TRUE)
+  if (any(is.nan(sqrt(e$values)))) {
+    C_corr = Matrix::nearPD(C)$mat
+    e_corr = eigen(C_corr, symmetric = TRUE)
     b = e_corr$vectors
     d <- diag(sqrt(e_corr$values), length(e_corr$values))
   } else {
