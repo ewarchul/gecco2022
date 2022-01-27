@@ -17,12 +17,12 @@ des_cma_esr_ppmf_best_no_cov <- hybrid_factory(
 des_cma_esr_ppmf_amean_no_cov <- hybrid_factory(
   des,
   cma_esr_ppmf,
-  "last_emean.param"
+  "last_amean.param"
 )
 des_cma_esr_ppmf_emean_no_cov <- hybrid_factory(
   des,
   cma_esr_ppmf,
-  "last_eman.param"
+  "last_emean.param"
 )
 
 des_cma_esr_ppmf_best_cov <- hybrid_factory(
@@ -34,13 +34,13 @@ des_cma_esr_ppmf_best_cov <- hybrid_factory(
 des_cma_esr_ppmf_amean_cov <- hybrid_factory(
   des,
   cma_esr_ppmf,
-  "last_emean.param",
+  "last_amean.param",
   TRUE
 )
 des_cma_esr_ppmf_emean_cov <- hybrid_factory(
   des,
   cma_esr_ppmf,
-  "last_eman.param",
+  "last_emean.param",
   TRUE
 )
 
