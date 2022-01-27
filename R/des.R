@@ -124,7 +124,7 @@ des <- function(par,
   initFt <- controlParam("initFt", 1)
   stopfitness <- controlParam("stopfitness", -Inf) ## Fitness value after which the convergence is reached
   ## Strategy parameter setting:
-  budget <- controlParam("budget", 10000 * N) ## The maximum number of fitness function calls
+  budget <- controlParam("budget", if ( N == 10) { 2 * 10^5 } else if ( N == 20) { 10^6 } else { N * 10^4 })
   initlambda <- controlParam("lambda", 4 * N) ## Population starting size
   lambda <- initlambda ## Population size
   mu <- controlParam("mu", floor(lambda / 2)) ## Selection size
@@ -169,6 +169,8 @@ des <- function(par,
   ## Initialize variables:
   best.fit <- Inf ## The best fitness found so far
   best.par <- NULL ## The best solution found so far
+  last_emean.par <- NULL
+  last_amean.par <- NULL
   worst.fit <- NULL ## The worst solution found so far:
   last.restart <- 0
   restart.length <- 0
@@ -358,6 +360,8 @@ des <- function(par,
         }
       }
 
+      
+
       ## Check worst fit:
       ww <- which.max(fitness)
       if (fitness[ww] > worst.fit) {
@@ -379,6 +383,9 @@ des <- function(par,
         best.fit <- drop(fn_cum)
         best.par <- cumMeanRepaired
       }
+
+      last_emean.par <- cumMeanRepaired
+      last_amean.par <- apply(populationRepaired, 1, mean)
 
       if (fitness[1] <= stopfitness) {
         msg <- "Stop fitness reached."
@@ -403,9 +410,11 @@ des <- function(par,
 
   names(best.fit) <- NULL
   res <- list(
-    par = best.par,
-    value = best.fit,
-    counts = cnt,
+    best.param = best.par,
+    best.fitness = best.fit,
+    last_emean.param = last_emean.par,
+    last_amean.param = last_amean.par,
+    n.evals = cnt,
     resets = restart.number,
     label = "des",
     convergence = ifelse(iter >= maxiter, 1L, 0L),

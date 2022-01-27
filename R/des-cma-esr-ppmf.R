@@ -9,4 +9,38 @@ source(here::here("R", "cma-esr-ppmf.R"))
 
 #' DES-CMA-ES-PPMF
 
-des_cma_esr_ppmf <- hybrid_factory(des, cma_esr_ppmf)
+des_cma_esr_ppmf_best_no_cov <- hybrid_factory(
+  des,
+  cma_esr_ppmf
+)
+
+des_cma_esr_ppmf_amean_no_cov <- hybrid_factory(
+  des,
+  cma_esr_ppmf,
+  "last_emean.param"
+)
+des_cma_esr_ppmf_emean_no_cov <- hybrid_factory(
+  des,
+  cma_esr_ppmf,
+  "last_eman.param"
+)
+
+des_cma_esr_ppmf_best_cov <- hybrid_factory(
+  des,
+  cma_esr_ppmf,
+  "best.param",
+  TRUE
+)
+des_cma_esr_ppmf_amean_cov <- hybrid_factory(
+  des,
+  cma_esr_ppmf,
+  "last_emean.param",
+  TRUE
+)
+des_cma_esr_ppmf_emean_cov <- hybrid_factory(
+  des,
+  cma_esr_ppmf,
+  "last_eman.param",
+  TRUE
+)
+

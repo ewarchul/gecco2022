@@ -21,7 +21,11 @@ cma_esr_csa <- function(par,
   n <- length(par)
 
   # get stopping conditions
-  budget <- getCMAESParameter(control, "budget", 10000 * n)
+  budget <- getCMAESParameter(
+    control,
+    "budget",
+    if (n == 10) { 2 * 10^5 } else if (n == 20) { 10^6 } else { n * 10^4 }
+  )
   stop_ons_list <-
     c(
       list(stopOnMaxEvals(budget))
@@ -168,7 +172,6 @@ cma_esr_csa <- function(par,
       x.best <- arx[, new.pop.idx, drop = FALSE]
       m.old <- m
       m <- drop(x.best %*% weights)
-
 
       y.best <- ary[, new.pop.idx, drop = FALSE]
       y.w <- drop(y.best %*% weights)

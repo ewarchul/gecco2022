@@ -8,5 +8,39 @@ source(here::here("R", "cma-esr-csa.R"))
 
 #' DES-CMA-ES-CSA
 
-des_cma_esr_csa <- hybrid_factory(des, cma_esr_csa)
+des_cma_esr_csa_best_no_cov <- hybrid_factory(
+  des,
+  cma_esr_csa
+)
+
+des_cma_esr_csa_amean_no_cov <- hybrid_factory(
+  des,
+  cma_esr_csa,
+  "last_emean.param"
+)
+des_cma_esr_csa_emean_no_cov <- hybrid_factory(
+  des,
+  cma_esr_csa,
+  "last_eman.param"
+)
+
+des_cma_esr_csa_best_cov <- hybrid_factory(
+  des,
+  cma_esr_csa,
+  "best.param",
+  TRUE
+)
+des_cma_esr_csa_amean_cov <- hybrid_factory(
+  des,
+  cma_esr_csa,
+  "last_emean.param",
+  TRUE
+)
+des_cma_esr_csa_emean_cov <- hybrid_factory(
+  des,
+  cma_esr_csa,
+  "last_eman.param",
+  TRUE
+)
+
 

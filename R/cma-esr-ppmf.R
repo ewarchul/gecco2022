@@ -20,7 +20,11 @@ cma_esr_ppmf <- function(par,
   n <- length(par)
 
   # get stopping conditions
-  budget <- getCMAESParameter(control, "budget", 10000 * n)
+  budget <- getCMAESParameter(
+    control,
+    "budget",
+    if (n == 10) { 2 * 10^5 } else if (n == 20) { 10^6 } else { n * 10^4 }
+  )  
   stop_ons_list <-
     c(
       list(stopOnMaxEvals(budget))

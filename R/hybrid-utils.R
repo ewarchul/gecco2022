@@ -1,11 +1,15 @@
-hybrid_factory = function(
-  des,
-  cmaes
-) {
-  return(\(par, fn, ..., lower, upper, control) {
-    lb <- lower; ub <- upper; n <- length(par)
-    budget <- 10000 * n
+hybrid_factory <- function(des,
+                           cmaes, point_type = "best.param", transfer_cov = FALSE) {
+  return(function(par, fn, ..., lower, upper, control) {
+    lb <- lower
+    ub <- upper
+    n <- length(par)
 
+    budget <- getCMAESParameter(
+      control,
+      "budget",
+      if (n == 10) { 2 * 10^5 } else if (n == 20) { 10^6 } else { n * 10^4 }
+    )
     lambda <- getCMAESParameter(control, "lambda", 4 * n)
     assertInt(lambda, lower = 4)
 
@@ -21,27 +25,54 @@ hybrid_factory = function(
       control = list(budget = 0.5 * budget, lambda = lambda, mu = mu)
     )
 
-    b <- matrix(); d <- matrix()
+    b <- matrix()
+    d <- matrix()
     C <- cov(t(des_result$diagnostic$pop))
     e <- eigen(C, symmetric = TRUE)
-
-    if (any(is.nan(sqrt(e$values)))) {
-      C_corr = Matrix::nearPD(C)$mat
-      e_corr = eigen(C_corr, symmetric = TRUE)
-      b = e_corr$vectors
-      d <- diag(sqrt(e_corr$values), length(e_corr$values))
+    if (transfer_cov) {
+      if (any(is.nan(sqrt(e$values)))) {
+        C_corr <- Matrix::nearPD(C)$mat
+        e_corr <- eigen(C_corr, symmetric = TRUE)
+        b <- e_corr$vectors
+        d <- diag(sqrt(e_corr$values), length(e_corr$values))
+      } else {
+        b <- e$vectors
+        d <- diag(sqrt(e$values), length(e$values))
+      }
     } else {
-      b <- e$vectors
-      d <- diag(sqrt(e$values), length(e$values))
+      b <- diag(n)
+      d <- diag(n)
     }
 
-    return(cmaes(
-      par = des_result$par,
+    cmaes_result <- cmaes(
+      par = des_result[[point_type]],
       fn = fn,
       lower = lb,
       upper = ub,
       control = list(budget = 0.5 * budget, B_matrix = b, D_matrix = d)
-    ))
+    )
+
+    best_param <- if (fn(des_result$best.param) < fn(cmaes_result$best.param)) {
+      des_result$best.param
+    } else {
+      cmaes_result$best.param
     }
-  )
-}
+    best_fitness <- min(des_result$best.fitness, cmaes_result$best.fitness)
+
+    best_val_log <- list(bestVal = c(
+      des_result$diagnostic$bestVal,
+      cmaes_result$diagnostic$bestVal
+    ))
+
+    return(list(
+      best.param = best_param,
+      best.fitness = best_fitness,
+      n.evals = des_result$n.evals + cmaes_result$n.evals,
+      label = "hybrid",
+      diagnostic = best_val_log,
+      message = cmaes_result$message,
+      classes = "hybrid_result",
+      des_result = des_result,
+      cmaes_result = cmaes_result
+    ))
+})}
