@@ -1,0 +1,47 @@
+methods:
+     1:
+       algorithm: "des_cma_esr_csa_best_cov"
+     2:
+       algorithm: "des_cma_esr_csa_best_no_cov"
+     3:
+       algorithm: "ppmf_cma_esr_csa_best_cov"
+     4:
+       algorithm: "ppmf_cma_esr_csa_best_no_cov"
+     5:
+       algorithm: "des_cma_esr_csa_amean_cov"
+     6:
+       algorithm: "des_cma_esr_csa_amean_no_cov"
+     7:
+       algorithm: "ppmf_cma_esr_csa_amean_cov"
+     8:
+       algorithm: "ppmf_cma_esr_csa_amean_no_cov"
+     9:
+       algorithm: "des_cma_esr_csa_emean_cov"
+     10:
+       algorithm: "des_cma_esr_csa_emean_no_cov"
+     11:
+       algorithm: "ppmf_cma_esr_csa_emean_cov"
+     12:
+       algorithm: "ppmf_cma_esr_csa_emean_no_cov"
+ids:
+  - "csa-best-cov"
+  - "csa-best-no-cov"
+  - "ppmf-best-cov"
+  - "ppmf-best-no-cov"
+  - "csa-amean-cov"
+  - "csa-amean-no-cov"
+  - "ppmf-amean-cov"
+  - "ppmf-amean-no-cov"
+  - "csa-emean-cov"
+  - "csa-emean-no-cov"
+  - "ppmf-emean-cov"
+  - "ppmf-emean-no-cov"
+probnum: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+dims:
+  - 10
+cec: 22
+repnum: 30
+suite: "bias_shift_rot"
+cpupc: 0.25
+source: "~/gecco2022/R"
+dest: "~/gecco2022/data/"
