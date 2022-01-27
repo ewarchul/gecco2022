@@ -59,14 +59,15 @@ hybrid_factory <- function(des,
     }
     best_fitness <- min(des_result$best.fitness, cmaes_result$best.fitness)
 
-    best_val_log <- list(bestVal = c(
+    best_val_log <- (list(bestVal = matrix(c(
       des_result$diagnostic$bestVal,
       cmaes_result$diagnostic$bestVal
-    ))
+    ))))
 
     return(list(
       best.param = best_param,
       best.fitness = best_fitness,
+      value = best_fitness,
       n.evals = des_result$n.evals + cmaes_result$n.evals,
       label = "hybrid",
       diagnostic = best_val_log,
