@@ -53,6 +53,8 @@ rb_ipop_cma_esr_csa = function(
   # RB-IPOP: new restart triggers ->  lastIts and sigSupress 
   restart.triggers = list("conditionCov", "noEffectCoord", "noEffectAxis", "tolX", "indefCovMat", "lastIts", "sigSupress")
 
+
+
   stop.ons.names = sapply(stop.ons, function(stop.on) stop.on$code)
   if (!isSubset(restart.triggers, stop.ons.names)) {
     stopf("Only codes / short names of active stopping conditions allowed as restart trigger, but '%s' are no stopping conditions.", collapse(setdiff(restart.triggers, stop.ons.names), sep = ", "))
@@ -100,13 +102,13 @@ rb_ipop_cma_esr_csa = function(
   for (run in 0:max.restarts) {
     # population and offspring size
     if (run == 0) {
-      lambda = getCMAESParameter(control, "lambda", 4 * n)
+      lambda = getCMAESParameter(control, "lambda", 4 + floor(3*log(n)))
       assertInt(lambda, lower = 4)
       mu = getCMAESParameter(control, "mu", floor(lambda / 2))
       assertInt(mu)
 	    m = par
     } else {
-      lambda = getCMAESParameter(control, "lambda", 4 * n)
+      lambda = getCMAESParameter(control, "lambda", 4 + floor(3*log(n)))
       # increase population size (IPOP-CMA-ES)
       lambda = ceiling(restart.multiplier^run * lambda)
       mu = floor(lambda / 2)
@@ -142,12 +144,12 @@ rb_ipop_cma_esr_csa = function(
     ccov = (1/cmu) * 2/(n+1.4)^2 + (1-1/cmu) * ((2*cmu-1)/((n+2)^2+2*cmu))
 
     # covariance matrix
-    sigma <- getCMAESParameter(control, "sigma", 1)
-    B <- diag(n)
-    D <- diag(n)
+    sigma <- getCMAESParameter(control, "sigma", 10)
+    B <- getCMAESParameter(control, "B_matrix", diag(n))
+    D <- getCMAESParameter(control, "D_matrix", diag(n))
     BD = B %*% D
     C = BD %*% t(BD) # C = B D^2 B^T = B B^T, since D equals I_n
-    Cinvsqrt = B %*% diag(1 / sqrt(diag(D))) %*% t(B)
+
 
     # no restart trigger fired until now
     restarting = FALSE

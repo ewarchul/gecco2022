@@ -1,0 +1,14 @@
+methods:
+     1:
+       algorithm: "des"
+ids:
+  - "des-10D"
+probnum: [6]
+dims:
+  - 10
+cec: 22
+repnum: 30
+suite: "bias_shift_rot"
+cpupc: 0.75
+source: "~/gecco2022/R"
+dest: "~/gecco2022/data/"

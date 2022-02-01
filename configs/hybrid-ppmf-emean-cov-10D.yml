@@ -1,0 +1,14 @@
+methods:
+    1:
+       algorithm: "des_cma_esr_ppmf_emean_cov"
+ids:
+  - "ppmf-emean-cov-10D"
+probnum: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+dims:
+  - 10
+cec: 22
+repnum: 30
+suite: "bias_shift_rot"
+cpupc: 0.75
+source: "~/gecco2022/R"
+dest: "~/gecco2022/data/"

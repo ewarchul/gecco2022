@@ -1,3 +1,4 @@
+
 hybrid_factory <- function(des,
                            cmaes, point_type = "best.param", transfer_cov = FALSE) {
   return(function(par, fn, ..., lower, upper, control) {
@@ -77,3 +78,4 @@ hybrid_factory <- function(des,
       cmaes_result = cmaes_result
     ))
 })}
+
