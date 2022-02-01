@@ -21,7 +21,7 @@ rb_ipop_cma_esr_csa = function(
   lb = lower 
   ub = upper
   n = length(par)
-	
+
   # get stopping conditions
   budget <- getCMAESParameter(
     control,
@@ -63,7 +63,7 @@ rb_ipop_cma_esr_csa = function(
   assertInt(max.restarts)
 
   #FIXME: default value should be derived from bounds
-  sigma <- getCMAESParameter(control, "sigma", 1)
+  sigma <- getCMAESParameter(control, "sigma", 10)
 
   assertNumber(sigma, lower = 0L, finite = TRUE)
   last_its_type = getCMAESParameter(control, "last_its_type", "mean")
@@ -92,7 +92,7 @@ rb_ipop_cma_esr_csa = function(
 
   # somehow dirty trick to "really quit" if stopping condition is met and
   # now more restart should be triggered.
-  do.terminate = TRUE
+  do.terminate = FALSE
 
   max_dx = (ub - lb) / 5
   last_its = 10 + ceiling(30 * n / (4 * n))
