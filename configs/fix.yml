@@ -1,0 +1,14 @@
+methods:
+     4:
+       algorithm: "des_cma_esr_ppmf_best_no_cov"
+ids:
+  - "ppmf-best-no-cov-fix"
+probnum: [3]
+dims:
+  - 10
+cec: 22
+repnum: 30
+suite: "bias_shift_rot"
+cpupc: 0.75
+source: "~/gecco2022/R"
+dest: "~/gecco2022/data/"
